@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Happy Birthday Bestie!</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        background: linear-gradient(to right, #ff9a9e, #fad0c4);
+        font-family: "Quicksand", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        height: 100vh;
+        overflow: hidden;
+        text-align: center;
+      }
+      h1 {
+        font-family: "Pacifico", cursive;
+        font-size: 3rem;
+        color: #ff5e78;
+        margin-bottom: 10px;
+      }
+      p {
+        font-size: 1.2rem;
+        color: #fff;
+        max-width: 80%;
+      }
+      canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .content {
+        z-index: 2;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="confetti"></canvas>
+    <div class="content">
+      <h1>🎉 Happy Birthday Bestie! 🎂</h1>
+      <p>
+        Semoga hidupmu penuh kebahagiaan, tawa, dan cinta yang nggak
+        habis-habis! 💖
+      </p>
+      <audio autoplay loop>
+        <source src="happy.mp3" type="audio/mpeg" />
+        Browsermu tidak mendukung audio.
+      </audio>
+    </div>
+    <script>
+      // Confetti effect
+      const canvas = document.getElementById("confetti");
+      const ctx = canvas.getContext("2d");
+      let confettis = [];
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      window.addEventListener("resize", resizeCanvas);
+      resizeCanvas();
+
+      function createConfetti() {
+        return {
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          r: Math.random() * 6 + 4,
+          d: Math.random() * 50 + 10,
+          color: `hsl(${Math.random() * 360}, 100%, 70%)`,
+          tilt: Math.floor(Math.random() * 10) - 5,
+          tiltAngleIncremental: Math.random() * 0.07 + 0.05,
+          tiltAngle: 0,
+        };
+      }
+
+      for (let i = 0; i < 150; i++) {
+        confettis.push(createConfetti());
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        confettis.forEach((c) => {
+          ctx.beginPath();
+          ctx.lineWidth = c.r / 2;
+          ctx.strokeStyle = c.color;
+          ctx.moveTo(c.x + c.tilt + c.r / 4, c.y);
+          ctx.lineTo(c.x + c.tilt, c.y + c.tilt + c.d / 4);
+          ctx.stroke();
+        });
+        update();
+      }
+
+      function update() {
+        confettis.forEach((c) => {
+          c.y += Math.cos(c.d) + 1 + c.r / 2;
+          c.x += Math.sin(0);
+          c.tiltAngle += c.tiltAngleIncremental;
+          c.tilt = Math.sin(c.tiltAngle) * 15;
+
+          if (c.y > canvas.height) {
+            c.x = Math.random() * canvas.width;
+            c.y = -20;
+          }
+        });
+      }
+
+      setInterval(draw, 20);
+    </script>
+  </body>
+</html>
